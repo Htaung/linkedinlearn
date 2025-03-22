@@ -1,0 +1,28 @@
+$(document).ready(function () {
+    var selectedItems = []; // Stores selected items in order
+
+    $('#mySelect').select2({
+        multiple: true,
+        tags: true, // Allows items to be added dynamically
+        createTag: function (params) {
+            return { id: params.term, text: params.term, newTag: true };
+        },
+        sorter: function (data) {
+            return data; // Ensure data is not sorted
+        }
+    }).on('select2:select', function (e) {
+        var id = e.params.data.id;
+        if (!selectedItems.includes(id)) {
+            selectedItems.push(id); // Maintain order
+        }
+        refreshSelection();
+    }).on('select2:unselect', function (e) {
+        var id = e.params.data.id;
+        selectedItems = selectedItems.filter(item => item !== id); // Remove from order
+        refreshSelection();
+    });
+
+    function refreshSelection() {
+        $('#mySelect').val(selectedItems).trigger('change'); // Reapply order
+    }
+});
