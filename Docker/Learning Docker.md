@@ -135,7 +135,7 @@ sudo usermod -aG docker username or $USER
 container are created from container images, compressed and pre-package file system, app along with its env and config,with an instruction 
 how to start app => that instruction is called entry point
 
-1. create container from image, if image not exists on your computer docker will try to retrieve it from container image registry
+# 1. create container from image, if image not exists on your computer docker will try to retrieve it from container image registry
 default => docker tried to pull from docker hub
 
 docker container create => create container => doesn't start container
@@ -161,6 +161,7 @@ solve all the logs on console and start the container
 - docker run automatically create a container from hello-world image, started it, attached it to container, to show as its output immediately
 #docker run hello-world
 
+#docker run --name containerName -d imagename:tag
 
 #docker run = docker container create + start + attach
 
@@ -402,3 +403,8 @@ use distributed architecture to run and connect hundreds of thousands of contain
 kubernetes also makes grouping, scaling and connecting Containers with outside world really easy
 Load balancing and securing container traffic to and from the ouside world are much easier with kubernetes
 kubernetes is the delivery serivces of docker containers
+
+
+SSH to existing running container
+docker ps 
+docker exec -it <container_name_or_id> /bin/bash

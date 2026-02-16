@@ -1,0 +1,73 @@
+---
+# Source: explore-california-website/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: explorecalifornia-com
+  name: explorecalifornia-svcs
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: explorecalifornia-com
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+# Source: explore-california-website/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: explorecalifornia-com
+  name: explorecalifornia-com
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: explorecalifornia-com
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: explorecalifornia-com
+    spec:
+      imagePullSecrets:
+        - name: explorecalifornia.com
+      containers:
+      - image: localhost:5000/explorecalifornia.com
+        name: explorecalifornia-com-sabpg
+        ports:
+          - containerPort: 80
+---
+# Source: explore-california-website/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  creationTimestamp: null
+  name: explorecalifornia-com
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: explorecalifornia-svcs
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix
+
